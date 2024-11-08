@@ -3,19 +3,21 @@ title: "Descriptive statistics of Paridae monitoring data"
 author: "Freya Coursey"
 format: html
 editor: visual
+echo: false
 ---
 
 ## Load packages
 
 ```{r}
 #| label: Load Packages
+#| include: false
 # Core packages for data manipulation, visualization, and modeling
-library(dplyr)       # Data manipulation
-library(ggplot2)     # Visualization
+library(tidyverse)       # Data manipulation
 library(lme4)        # Mixed-effects models
 library(broom.mixed) # Tidy methods for mixed models
 library(TMB)         # Template Model Builder
 library(MuMIn)       # Model selection and multimodel inference
+library(gt)          # Table visualisation
 
 # Visualization and theme extensions
 library(ggfortify)   # Auto-plotting for statistical results
@@ -28,10 +30,8 @@ library(car)         # Companion to Applied Regression
 library(jtools)      # Tools for regression models
 
 # Additional data handling and formatting
-library(tidyr)       # Data tidying
 library(Hmisc)       # Miscellaneous data utilities
 library(pander)      # Rendering tables in markdown
-library(usethis)
 library(conflicted)
 
 conflict_prefer_all("dplyr", quiet = TRUE) # use dplyr if there is a name conflict
@@ -42,12 +42,11 @@ theme_set(theme_classic())
 
 ## Load data
 
-(from local drive for now...)
-
 ```{r}
 #| label: Load data
+#| include: false
 #| 
-Main_data_milde <- read.csv("~/Documents/Documents - Freya's Macbook Pro/PhD/PhD Research/Monitoring_R_project/Main_data_milde.csv")
+Main_data_milde <- read_csv("Main_data_milde.csv")
 View(Main_data_milde)
 ```
 
@@ -57,12 +56,13 @@ Data were analysed in R version r paste(R.version$major, R.version$minor, sep = 
 
 ```{r}
 #| label: Clean and filter data
+#| include: false
 
 # File name for cleaning
 Nestbox_data <- Main_data_milde
 
 # Covariate to factor
-Nestbox_data$Year<-factor(Nestbox_data$Year)
+Nestbox_data$factor_Year<-factor(Nestbox_data$Year) # creating a new column
 Nestbox_data$Nestbox<-factor(Nestbox_data$Nestbox)
 Nestbox_data$Species<-factor(Nestbox_data$Species)
 
@@ -80,6 +80,8 @@ GT.data<-subset(Nestbox_data, Species=="Kjøttmeis")
 # Subsetting by occupancy
 occupied.data<-subset(Nestbox_data, Occupied=="yes")
 occupied.data <- filter(occupied.data, LayDate!= ".")
+occupied.data <- filter(occupied.data, Species!= ".")
+occupied.data <- filter(occupied.data, Species!= "?")
 
 ```
 
@@ -87,10 +89,10 @@ occupied.data <- filter(occupied.data, LayDate!= ".")
 
 In total, we monitored `r nrow(occupied.data)` nests of birds in nestboxes from `r min(Main_data_milde$Year)` to `r max(Main_data_milde$Year)`.
 
-We monitored `r sum(occupied.data$Species =="Blåmeis")` nests of blue tit, and `r sum(occupied.data$Species =="Kjøttmeis")` nests of great tit. The rest were nests of coal tit and pied flycatcher.
+We monitored `r sum(occupied.data$Species =="Blåmeis")` nests of blue tit, and `r sum(occupied.data$Species =="Kjøttmeis")` nests of great tit. In 2022, one nest had both blue and great tit young raised by blue tit parents. The remaining rests were of coal tit and pied flycatcher (@tbl-species-laydate). 
 
 ```{r}
-#| label: occupancy-means
+#| label: occupancy-rate-table
 
 #Occupancy rate
 group_counts <- table(Nestbox_data$Occupied)
@@ -102,6 +104,10 @@ occupancy_rate_table <- data.frame(
   Occupied = names(percentage_by_group),
   Percentage = percentage_by_group)
 print(occupancy_rate_table)
+```
+
+```{r}
+#| label: species-percentages-table
 
 #Species percentage
 group_counts <- table(occupied.data$Species)
@@ -113,15 +119,36 @@ species_number_table <- data.frame(
   Species = names(percentage_by_group),
   Percentage = percentage_by_group)
 print(species_number_table)
-
-#Occupancy rate
-group_counts <- table(Nestbox_data$Occupied)
-total_count <- sum(group_counts)
-percentage_by_group <- (group_counts / total_count) * 100
-# Combine group names and percentages into a data frame
-result_base_R <- data.frame(
-  Occupied = names(percentage_by_group),
-  Percentage = percentage_by_group)
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+
+```{r}
+#| label: tbl-species-laydate
+#| tbl-cap: Mean lay date for each species
+
+occupied.data |> 
+  group_by(Species) |> 
+  summarise(nests = n(), 
+            success = sum(Fledged > 0, na.rm = TRUE),
+            success_rate = round((success/nests)*100, digits=0),
+            mean_laydate = round(mean(LayDate), digits=0),
+            mean_std_dev = round(sd(LayDate), digits = 2), 
+            .groups = "drop") |> 
+  mutate(mean_laydate = paste(mean_laydate, "(+/-)", mean_std_dev)) |> 
+  gt() |> 
+  cols_label(nests = "Number of nests", success = "Number of successful nests", success_rate = "Success rate %", Species = "Species", mean_laydate = "Mean Lay Date", mean_std_dev = "Standard deviation")
+  
+```
+
+```{r}
+#| label: fig-species-laydate
+#| fig-alt: "A box plot of species lay dates"
+#| fig-width: 5.2
+
+# exclude kjøttmeis/blåmeis
+ex.occupied.data <- filter(occupied.data, Species!= "Kjøttmeis/Blåmeis")
+ggplot(ex.occupied.data, aes(x = Species, y = LayDate)) +
+  geom_boxplot(fill = "lightgreen") +
+  labs(x = "Species", y = "Lay Date (day since 1st April)")
+```
+
