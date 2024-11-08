@@ -77,6 +77,51 @@ Nestbox_data$Hatch_gap <- as.numeric(as.character(Nestbox_data$Hatch_gap))
 BT.data<-subset(Nestbox_data, Species=="Blåmeis")
 GT.data<-subset(Nestbox_data, Species=="Kjøttmeis")
 
+# Subsetting by occupancy
+occupied.data<-subset(Nestbox_data, Occupied=="yes")
+occupied.data <- filter(occupied.data, LayDate!= ".")
+
+```
+
+## Descriptive statistics
+
+In total, we monitored `r nrow(occupied.data)` nests of birds in nestboxes from `r min(Main_data_milde$Year)` to `r max(Main_data_milde$Year)`.
+
+We monitored `r sum(occupied.data$Species =="Blåmeis")` nests of blue tit, and `r sum(occupied.data$Species =="Kjøttmeis")` nests of great tit. The rest were nests of coal tit and pied flycatcher.
+
+```{r}
+#| label: occupancy-means
+
+#Occupancy rate
+group_counts <- table(Nestbox_data$Occupied)
+total_count <- sum(group_counts)
+percentage_by_group <- (group_counts / total_count) * 100
+# Combine group names and percentages into a data frame
+occupancy_rate_table <- data.frame(
+  Number = group_counts,
+  Occupied = names(percentage_by_group),
+  Percentage = percentage_by_group)
+print(occupancy_rate_table)
+
+#Species percentage
+group_counts <- table(occupied.data$Species)
+total_count <- sum(group_counts)
+percentage_by_group <- (group_counts / total_count) * 100
+# Combine group names and percentages into a data frame
+species_number_table <- data.frame(
+  Number = group_counts,
+  Species = names(percentage_by_group),
+  Percentage = percentage_by_group)
+print(species_number_table)
+
+#Occupancy rate
+group_counts <- table(Nestbox_data$Occupied)
+total_count <- sum(group_counts)
+percentage_by_group <- (group_counts / total_count) * 100
+# Combine group names and percentages into a data frame
+result_base_R <- data.frame(
+  Occupied = names(percentage_by_group),
+  Percentage = percentage_by_group)
 ```
 
 The `echo: false` option disables the printing of code (only output is displayed).

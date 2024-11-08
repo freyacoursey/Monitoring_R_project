@@ -246,6 +246,101 @@ Attaching package: 'Hmisc'</code></pre>
 <section id="data-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="data-analysis">Data Analysis</h2>
 <p>Data were analysed in R version r paste(R.version<span class="math inline">\(major, R.version\)</span>minor, sep = “.”) <span class="citation" data-cites="R">[@R]</span>, using tidyverse for data manipulation and plots <span class="citation" data-cites="tidyverse">[@tidyverse]</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># File name for cleaning</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>Nestbox_data <span class="ot">&lt;-</span> Main_data_milde</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Covariate to factor</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>Nestbox_data<span class="sc">$</span>Year<span class="ot">&lt;-</span><span class="fu">factor</span>(Nestbox_data<span class="sc">$</span>Year)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>Nestbox_data<span class="sc">$</span>Nestbox<span class="ot">&lt;-</span><span class="fu">factor</span>(Nestbox_data<span class="sc">$</span>Nestbox)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>Nestbox_data<span class="sc">$</span>Species<span class="ot">&lt;-</span><span class="fu">factor</span>(Nestbox_data<span class="sc">$</span>Species)</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Factor to covariate</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>Nestbox_data<span class="sc">$</span>LayDate <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Nestbox_data<span class="sc">$</span>LayDate))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: NAs introduced by coercion</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>Nestbox_data<span class="sc">$</span>BroodSize <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Nestbox_data<span class="sc">$</span>BroodSize))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: NAs introduced by coercion</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Nestbox_data<span class="sc">$</span>Fledged <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Nestbox_data<span class="sc">$</span>Fledged))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: NAs introduced by coercion</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>Nestbox_data<span class="sc">$</span>ClutchSize <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Nestbox_data<span class="sc">$</span>ClutchSize))</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>Nestbox_data<span class="sc">$</span>Hatch_gap <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Nestbox_data<span class="sc">$</span>Hatch_gap))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: NAs introduced by coercion</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subsetting data by species</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>BT.data<span class="ot">&lt;-</span><span class="fu">subset</span>(Nestbox_data, Species<span class="sc">==</span><span class="st">"Blåmeis"</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>GT.data<span class="ot">&lt;-</span><span class="fu">subset</span>(Nestbox_data, Species<span class="sc">==</span><span class="st">"Kjøttmeis"</span>)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Subsetting by occupancy</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>occupied.data<span class="ot">&lt;-</span><span class="fu">subset</span>(Nestbox_data, Occupied<span class="sc">==</span><span class="st">"yes"</span>)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>occupied.data <span class="ot">&lt;-</span> <span class="fu">filter</span>(occupied.data, LayDate<span class="sc">!=</span> <span class="st">"."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="descriptive-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="descriptive-statistics">Descriptive statistics</h2>
+<p>In total, we monitored 206 nests of birds in nestboxes from 2017 to 2023.</p>
+<p>We monitored 115 nests of blue tit, and 79 nests of great tit. The rest were nests of coal tit and pied flycatcher.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Occupancy rate</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>group_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(Nestbox_data<span class="sc">$</span>Occupied)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>total_count <span class="ot">&lt;-</span> <span class="fu">sum</span>(group_counts)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>percentage_by_group <span class="ot">&lt;-</span> (group_counts <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine group names and percentages into a data frame</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>occupancy_rate_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Number =</span> group_counts,</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Occupied =</span> <span class="fu">names</span>(percentage_by_group),</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Percentage =</span> percentage_by_group)</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(occupancy_rate_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Number.Var1 Number.Freq Occupied Percentage.Var1 Percentage.Freq
+1          no          44       no              no        16.92308
+2         yes         216      yes             yes        83.07692</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Species percentage</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>group_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(occupied.data<span class="sc">$</span>Species)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>total_count <span class="ot">&lt;-</span> <span class="fu">sum</span>(group_counts)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>percentage_by_group <span class="ot">&lt;-</span> (group_counts <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine group names and percentages into a data frame</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>species_number_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Number =</span> group_counts,</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Species =</span> <span class="fu">names</span>(percentage_by_group),</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Percentage =</span> percentage_by_group)</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(species_number_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           Number.Var1 Number.Freq              Species      Percentage.Var1
+1                    ?           1                    ?                    ?
+2                    .           2                    .                    .
+3              Blåmeis         115              Blåmeis              Blåmeis
+4            Kjøttmeis          79            Kjøttmeis            Kjøttmeis
+5    Kjøttmeis/Blåmeis           1    Kjøttmeis/Blåmeis    Kjøttmeis/Blåmeis
+6             Nuthatch           0             Nuthatch             Nuthatch
+7 Svarthvitfluesnapper           4 Svarthvitfluesnapper Svarthvitfluesnapper
+8            Svartmeis           4            Svartmeis            Svartmeis
+  Percentage.Freq
+1       0.4854369
+2       0.9708738
+3      55.8252427
+4      38.3495146
+5       0.4854369
+6       0.0000000
+7       1.9417476
+8       1.9417476</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Occupancy rate</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>group_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(Nestbox_data<span class="sc">$</span>Occupied)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>total_count <span class="ot">&lt;-</span> <span class="fu">sum</span>(group_counts)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>percentage_by_group <span class="ot">&lt;-</span> (group_counts <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine group names and percentages into a data frame</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>result_base_R <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Occupied =</span> <span class="fu">names</span>(percentage_by_group),</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Percentage =</span> percentage_by_group)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
 </section>
 
