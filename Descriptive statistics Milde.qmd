@@ -1,0 +1,51 @@
+---
+title: "Descriptive statistics of Paridae monitoring data"
+author: "Freya Coursey"
+format: html
+editor: visual
+---
+
+## Load packages
+
+```{r}
+#| label: Load Packages
+# Core packages for data manipulation, visualization, and modeling
+library(dplyr)       # Data manipulation
+library(ggplot2)     # Visualization
+library(lme4)        # Mixed-effects models
+library(broom.mixed) # Tidy methods for mixed models
+library(TMB)         # Template Model Builder
+library(MuMIn)       # Model selection and multimodel inference
+
+# Visualization and theme extensions
+library(ggfortify)   # Auto-plotting for statistical results
+library(ggiraphExtra) # Interactive ggplot extensions
+library(ggthemes)    # Additional themes for ggplot2
+
+# Model interpretation and effects
+library(effects)     # Visualizing model effects
+library(car)         # Companion to Applied Regression
+library(jtools)      # Tools for regression models
+
+# Additional data handling and formatting
+library(tidyr)       # Data tidying
+library(Hmisc)       # Miscellaneous data utilities
+library(pander)      # Rendering tables in markdown
+
+conflict_prefer_all("dplyr", quiet = TRUE) # use dplyr if there is a name conflict
+
+# default plot theme
+theme_set(theme_classic())
+```
+
+## Load data ## 
+(from local drive for now...)
+
+```{r}
+#| label: Load data
+#| 
+Main_data_milde <- read.csv("~/Documents/Documents - Freya's Macbook Pro/PhD/PhD Research/Monitoring_R_project/Main_data_milde.csv")
+>   View(Main_data_milde)
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
