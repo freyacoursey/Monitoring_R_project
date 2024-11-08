@@ -31,6 +31,8 @@ library(jtools)      # Tools for regression models
 library(tidyr)       # Data tidying
 library(Hmisc)       # Miscellaneous data utilities
 library(pander)      # Rendering tables in markdown
+library(usethis)
+library(conflicted)
 
 conflict_prefer_all("dplyr", quiet = TRUE) # use dplyr if there is a name conflict
 
@@ -38,14 +40,19 @@ conflict_prefer_all("dplyr", quiet = TRUE) # use dplyr if there is a name confli
 theme_set(theme_classic())
 ```
 
-## Load data ## 
+## Load data
+
 (from local drive for now...)
 
 ```{r}
 #| label: Load data
 #| 
 Main_data_milde <- read.csv("~/Documents/Documents - Freya's Macbook Pro/PhD/PhD Research/Monitoring_R_project/Main_data_milde.csv")
->   View(Main_data_milde)
+View(Main_data_milde)
 ```
+
+## Data Analysis ##
+
+Data were analysed in R version r paste(R.version$major, R.version$minor, sep = ".") [@R], using tidyverse for data manipulation and plots [@tidyverse].
 
 The `echo: false` option disables the printing of code (only output is displayed).

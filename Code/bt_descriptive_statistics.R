@@ -1,6 +1,6 @@
 #### Updated Blue Tit Script ####
 
-rm(list=ls())
+#rm(list=ls()) # don't have this at the start of code that you share! It will clear someone else's workspace... and they won't be happy!!
 
 ## jtools seems to work now
 
