@@ -51,8 +51,32 @@ Main_data_milde <- read.csv("~/Documents/Documents - Freya's Macbook Pro/PhD/PhD
 View(Main_data_milde)
 ```
 
-## Data Analysis ##
+## Data Analysis
 
 Data were analysed in R version r paste(R.version$major, R.version$minor, sep = ".") [@R], using tidyverse for data manipulation and plots [@tidyverse].
+
+```{r}
+#| label: Clean and filter data
+
+# File name for cleaning
+Nestbox_data <- Main_data_milde
+
+# Covariate to factor
+Nestbox_data$Year<-factor(Nestbox_data$Year)
+Nestbox_data$Nestbox<-factor(Nestbox_data$Nestbox)
+Nestbox_data$Species<-factor(Nestbox_data$Species)
+
+# Factor to covariate
+Nestbox_data$LayDate <- as.numeric(as.character(Nestbox_data$LayDate))
+Nestbox_data$BroodSize <- as.numeric(as.character(Nestbox_data$BroodSize))
+Nestbox_data$Fledged <- as.numeric(as.character(Nestbox_data$Fledged))
+Nestbox_data$ClutchSize <- as.numeric(as.character(Nestbox_data$ClutchSize))
+Nestbox_data$Hatch_gap <- as.numeric(as.character(Nestbox_data$Hatch_gap))
+
+# Subsetting data by species
+BT.data<-subset(Nestbox_data, Species=="Blåmeis")
+GT.data<-subset(Nestbox_data, Species=="Kjøttmeis")
+
+```
 
 The `echo: false` option disables the printing of code (only output is displayed).
