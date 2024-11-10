@@ -145,18 +145,26 @@ occupied.data |>
 #| label: tbl-species-laydate-2
 #| tbl-cap: Mean lay date for each species
 
-occupied.data |> 
-  group_by(largescale_vegtype) |> 
+# Creation of function to calculate standard error
+standard_error <- function(x) {
+  sd(x) / sqrt(length(x))
+}
+
+# Creation of table
+tit.data |> 
+  group_by(Species, vegtype_25m) |> 
   summarise(nests = n(), 
             success = sum(Fledged > 0, na.rm = TRUE),
             success_rate = round((success/nests)*100, digits=0),
             mean_laydate = round(mean(LayDate), digits=0),
             mean_std_dev = round(sd(LayDate), digits = 2), 
+            mean_std_err = round(standard_error(LayDate), digits = 2), 
             .groups = "drop") |> 
-  # mutate(mean_laydate = paste(mean_laydate, "(+/-)", mean_std_dev)) |> 
+  # mutate(mean_laydate = paste(mean_laydate, "(+/-)", mean_std_err) |> 
   gt() |> 
-  cols_label(nests = "Number of nests", success = "Number of successful nests", success_rate = "Success rate %", mean_laydate = "Mean Lay Date", mean_std_dev = "Standard deviation", largescale_vegtype = "Vegetation type")
-  
+  cols_label(nests = "Number of nests", success = "Number of successful nests", success_rate = "Success rate %", mean_laydate = "Mean Lay Date", mean_std_dev = "Standard deviation", mean_std_err = "Standard error", vegtype_25m = "Vegetation type")
+
+
 ```
 
 ```{r}
