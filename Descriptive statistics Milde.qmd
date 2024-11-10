@@ -64,7 +64,7 @@ Nestbox_data <- Main_data_milde
 # Covariate to factor
 Nestbox_data$factor_Year<-factor(Nestbox_data$Year) # creating a new column
 Nestbox_data$Nestbox<-factor(Nestbox_data$Nestbox)
-Nestbox_data$Species<-factor(Nestbox_data$Species)
+#Nestbox_data$Species<-factor(Nestbox_data$Species)
 
 # Factor to covariate
 Nestbox_data$LayDate <- as.numeric(as.character(Nestbox_data$LayDate))
@@ -78,10 +78,14 @@ BT.data<-subset(Nestbox_data, Species=="Blåmeis")
 GT.data<-subset(Nestbox_data, Species=="Kjøttmeis")
 
 # Subsetting by occupancy
-occupied.data<-subset(Nestbox_data, Occupied=="yes")
-occupied.data <- filter(occupied.data, LayDate!= ".")
-occupied.data <- filter(occupied.data, Species!= ".")
-occupied.data <- filter(occupied.data, Species!= "?")
+occupied.data <- Nestbox_data |>
+  subset(Occupied == "yes") |>
+  filter(LayDate != ".") |>
+  filter(Species != ".") |>
+  filter(Species != "?")
+
+# only tits
+tit.data <- subset(occupied.data, Species %in% c("Kjøttmeis", "Blåmeis"))
 
 ```
 
@@ -124,19 +128,34 @@ print(species_number_table)
 
 ```{r}
 #| label: tbl-species-laydate
-#| tbl-cap: Mean lay date for each species
+#| tbl-cap: Number of nests of each species
 
 occupied.data |> 
   group_by(Species) |> 
+  summarise(nests = n(), 
+            success = sum(Fledged > 0, na.rm = TRUE),
+            success_rate = round((success/nests)*100, digits=0), 
+            .groups = "drop") |>
+  gt() |> 
+  cols_label(nests = "Number of nests", success = "Number of successful nests", success_rate = "Success rate %", Species = "Species")
+  
+```
+
+```{r}
+#| label: tbl-species-laydate-2
+#| tbl-cap: Mean lay date for each species
+
+occupied.data |> 
+  group_by(largescale_vegtype) |> 
   summarise(nests = n(), 
             success = sum(Fledged > 0, na.rm = TRUE),
             success_rate = round((success/nests)*100, digits=0),
             mean_laydate = round(mean(LayDate), digits=0),
             mean_std_dev = round(sd(LayDate), digits = 2), 
             .groups = "drop") |> 
-  mutate(mean_laydate = paste(mean_laydate, "(+/-)", mean_std_dev)) |> 
+  # mutate(mean_laydate = paste(mean_laydate, "(+/-)", mean_std_dev)) |> 
   gt() |> 
-  cols_label(nests = "Number of nests", success = "Number of successful nests", success_rate = "Success rate %", Species = "Species", mean_laydate = "Mean Lay Date", mean_std_dev = "Standard deviation")
+  cols_label(nests = "Number of nests", success = "Number of successful nests", success_rate = "Success rate %", mean_laydate = "Mean Lay Date", mean_std_dev = "Standard deviation", largescale_vegtype = "Vegetation type")
   
 ```
 
